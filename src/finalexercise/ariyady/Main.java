@@ -36,26 +36,30 @@ public class Main {
 			System.out.println("Dictionary Bahasa<->Jawa");
 			System.out.println("1. Found Word");
 			System.out.println("2. Add Word");
+			System.out.println("3. Show All Words");
 			System.out.print("Input Your Choice  : ");
 			input = sc.nextLine();
 			switch (input) {
 			case "1":
 				System.out.print("Input a word : ");
 				input = sc.nextLine();
-				try {
-					result = foundWord(input);
-					result.stream().map(String::toUpperCase).forEach(System.out::println);;
-				} catch (NullPointerException e) {
-					// TODO: handle exception
-					System.out.print("Data Not Found");
+				result = foundWord(input);
+				//System.out.println(result);
+				if(result.size() == 0){
+					System.out.println("Data not Found");
+				}else{
+					result.stream().map(String::toUpperCase).forEach(System.out::println);
 				}
 				break;
 			case "2":
-				System.out.print("Input a javanise word: ");
+				System.out.print("Input a javanese word: ");
 				input = sc.nextLine();
 				System.out.print("Meaning in Bahasa : ");
 				input2 = sc.nextLine();
 				addWord(input,input2);
+				break;
+			case "3":
+				showWord();
 				break;
 			default:
 				break;
@@ -67,13 +71,17 @@ public class Main {
 		
 	}
 	
-	public static List<String> foundWord(String inputString) throws Exception {
+	public static List<String> foundWord(String inputString) throws IOException{
 		List<String> words = null;
-		
-		words = Files.lines(Paths.get(file))
-				  .filter(w -> w.contains(inputString))
-				  .collect(Collectors.toList());
-		
+	    try {
+			words = Files.lines(Paths.get(file))
+					  .filter(w -> w.contains(inputString))
+					  .collect(Collectors.toList());
+			
+		} catch (NullPointerException e) {
+			
+		}
+	    
 	    return words;
 	  }
 	
@@ -88,6 +96,17 @@ public class Main {
 	    } catch (IOException ioe) {
 	      System.err.printf("IOException: %s%n", ioe);
 	    }
+	}
+	
+	public static void showWord(){
+		try {
+			Files.lines(Paths.get(file))
+			.map(String::toUpperCase)
+			.forEach(System.out::println);
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.err.print(e);
+		}
 	}
 
 }
